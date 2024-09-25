@@ -1,0 +1,13 @@
+.hoverScale {
+    display: block; 
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .hoverScale:hover {
+    transform: scale(1.1);
+  }
+  
+  .iconHoverScale:hover {
+    transform: scale(1.2);
+  }
+  

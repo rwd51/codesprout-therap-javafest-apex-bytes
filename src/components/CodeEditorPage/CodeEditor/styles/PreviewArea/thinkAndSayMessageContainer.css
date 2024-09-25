@@ -1,0 +1,20 @@
+#message-container {
+    position: relative;
+    width: 200px; /* or whatever width you want */
+    height: 100px; /* or whatever height you want */
+}
+#message-box {
+    position: relative; /* Ensure it's above the image */
+    z-index: 10; /* Higher than the image's z-index */
+}
+.message-content {
+    position: absolute;
+    top: 50%;  /* Center vertically in the bubble */
+    left: 50%; /* Center horizontally in the bubble */
+    transform: translate(-50%, -50%); /* Ensure exact centering */
+    color: black; /* Make text color dark for visibility */
+    text-align: center; /* Center text */
+    padding: 10px; /* Padding inside the text area */
+    width: 90%; /* Give some margin inside the bubble */
+  }
+  
