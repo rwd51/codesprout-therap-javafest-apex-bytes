@@ -34,6 +34,21 @@ The CodeSprout is a solution that uses AI to transform children's learning exper
 ### **5. Automated Project Generation**
    - **Automated Project Creation**: Automatically generates new and exciting projects tailored to the child's progress and learning curve.
 
+## **System Architecture**
+
+This microservice-based project comprises seven core services: **UserService**, **ParentService**, **ChatbotService**, **CodingAssistantService**, **RecommendationService**, **ParentService**, and **ProblemService**. Each service is hosted on separate servers to ensure scalability and optimal performance. Additionally, two essential modules, the **Gateway** and **Discovery Server**, are employed for inter-service communication and load balancing.
+
+### **Service Responsibilities**
+- **UserService**: Manages user authentication, profile management, and user-related data storage.
+- **ParentService**: Enables parental control, progress tracking, and generates progress reports in PDF format.
+- **ChatbotService**: Handles the chatbot functionality, providing AI-based interactions and suggestions.
+- **CodingAssistantService**: Assists children in their coding activities, offering real-time feedback and help.
+- **RecommendationService**: Generates AI-based learning recommendations based on user interaction and progress.
+- **ProblemService**: Manages problem-solving tasks, tracks user progress, and gamifies problem challenges.
+- **Gateway and Discovery Server**: The **Gateway** handles routing and traffic control 
+between services, while the **Discovery Server** manages service registration and load balancing across microservices.
+
+<img width="1414" alt="Screenshot 2024-09-26 at 12 48 11 AM" src="https://github.com/user-attachments/assets/a70ed355-06c0-4c1b-a039-a0c00655d4d0">
 
 
 
