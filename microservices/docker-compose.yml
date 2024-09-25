@@ -1,0 +1,79 @@
+version: '3.3'
+
+services:
+
+  discovery-server:
+    image: discovery-server:v1
+    ports:
+      - '8098:8098'
+    build:
+      context: ./discovery-server  # Adjust this path if necessary
+
+  user-service:
+    image: user-service:v1
+    ports:
+      - '8092:8080'
+    depends_on:
+      - discovery-server
+    build:
+      context: ./user-service  # This path points to the user-service directory
+
+  project-service:
+    image: project-service:v1
+    ports:
+      - '8093:8080'
+    depends_on:
+      - discovery-server
+      - user-service
+    build:
+      context: ./project-service
+
+  problem-service:
+    image: problem-service:v1
+    ports:
+      - '8094:8080'
+    depends_on:
+      - discovery-server
+      - user-service
+    build:
+      context: ./problem-service
+
+  parent-service:
+    image: parent-service:v1
+    ports:
+      - '8095:8080'
+    depends_on:
+      - discovery-server
+      - user-service
+    build:
+      context: ./parent-service
+
+  recommendation-service:
+    image: recommendation-service:v1
+    ports:
+      - '8096:8080'
+    depends_on:
+      - discovery-server
+      - user-service
+    build:
+      context: ./recommendation-service
+
+  codingAssistant-service:
+    image: codingassistant-service:v1
+    ports:
+      - '8097:8080'
+    depends_on:
+      - discovery-server
+      - user-service
+    build:
+      context: ./codingAssistant-service
+
+  chatbot-service:
+    image: chatbot-service:v1
+    ports:
+      - '8000:8080'
+    depends_on:
+      - discovery-server
+      - user-service
+    build:
+      context: ./chatbot-service
