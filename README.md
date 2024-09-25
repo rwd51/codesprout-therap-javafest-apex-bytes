@@ -29,6 +29,7 @@ The CodeSprout is a solution that uses AI to transform children's learning exper
 
 ### **4. Parental Involvement**
    - **Connected with Parents**: Seamless connection with parents to keep them updated on their child's learning journey.
+y.
    - **Parents Monitoring Progress**: Parents can monitor their child’s progress and receive a comprehensive PDF report.
 
 ### **5. Automated Project Generation**
@@ -49,6 +50,26 @@ This microservice-based project comprises seven core services: **UserService**, 
 between services, while the **Discovery Server** manages service registration and load balancing across microservices.
 
 <img width="1414" alt="Screenshot 2024-09-26 at 12 48 11 AM" src="https://github.com/user-attachments/assets/a70ed355-06c0-4c1b-a039-a0c00655d4d0">
+
+The following diagram visually represents the end-to-end flow of the project.
+
+<img width="622" alt="Screenshot 2024-09-26 at 3 54 07 AM" src="https://github.com/user-attachments/assets/a01c33d7-3221-4bf6-bab9-4e5c1b96da1a">
+
+## **Technology Stack**
+
+| **Component**              | **Technologies**                                                                 |
+|----------------------------|----------------------------------------------------------------------------------|
+| **Frontend**               | React.js, Redux                                                                  |
+| **Backend**                | Java Spring Boot, Spring Cloud Netflix Eureka, Spring Cloud Gateway, Spring Security |
+| **Database & Storage**     | MongoDB, Firebase Storage (for PDFs)                                              |
+| **CSS Framework & Design** | Tailwind CSS (Framework), Canva (Design Tool)                                     |
+| **AI Models**              | GPT-3.5-turbo (Text), AutoDraw API wrapper (Image Generation)                     |
+| **Speech-related**         | React-speech-recognition (Speech to Text)                                         |
+| **Recommendation Service** | Recombee                                                                          |
+| **Cloud Deployment**       | Docker, AWS                                                                      |
+| **Other Tools**            | jsPDF (PDF Creation)                                                             |
+
+
 
 
 
