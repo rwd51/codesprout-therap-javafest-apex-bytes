@@ -29,7 +29,6 @@ The CodeSprout is a solution that uses AI to transform children's learning exper
 
 ### **4. Parental Involvement**
    - **Connected with Parents**: Seamless connection with parents to keep them updated on their child's learning journey.
-y.
    - **Parents Monitoring Progress**: Parents can monitor their child’s progress and receive a comprehensive PDF report.
 
 ### **5. Automated Project Generation**
