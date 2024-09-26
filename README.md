@@ -69,6 +69,8 @@ The following diagram visually represents the end-to-end flow of the project.
 | **Other Tools**            | jsPDF (PDF Creation), Pyodide (Running Python Scripts in browser), chartJS (Graphs and Statisitics) |
 
 
+# **CodeSprout**
 
+We deployed our application on AWS EC2 instance. Link : https://13.51.172.107:8000/
 
 
