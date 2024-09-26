@@ -59,15 +59,15 @@ The following diagram visually represents the end-to-end flow of the project.
 
 | **Component**              | **Technologies**                                                                 |
 |----------------------------|----------------------------------------------------------------------------------|
-| **Frontend**               | React.js, Redux                                                                  |
+| **Frontend**               | React.js, Redux, MaterialUI                                                               |
 | **Backend**                | Java Spring Boot, Spring Cloud Netflix Eureka, Spring Cloud Gateway, Spring Security |
-| **Database & Storage**     | MongoDB, Firebase Storage (for PDFs)                                              |
+| **Database & Storage**     | MongoDB, Firebase Storage (for PDFs and Images)                                   |
 | **CSS Framework & Design** | Tailwind CSS (Framework), Canva (Design Tool)                                     |
-| **AI Models**              | GPT-3.5-turbo (Text), AutoDraw API wrapper (Image Generation)                     |
-| **Speech-related**         | React-speech-recognition (Speech to Text)                                         |
-| **Recommendation Service** | Recombee                                                                          |
+| **AI Models**              | GPT-3.5-turbo (Text), [AutoDraw API wrapper](https://github.com/engelsjk/python-test-googledraw-api)(Image Generation)                    |
+| **Speech-related**         | React-speech-recognition (Speech to Text), React Speech Synthesis (Text to Speech)|
+| **AI Recommendation Service**| Recombee                                                                          |
 | **Cloud Deployment**       | Docker, AWS                                                                      |
-| **Other Tools**            | jsPDF (PDF Creation)                                                             |
+| **Other Tools**            | jsPDF (PDF Creation), Pyodide (Running Python Scripts in browser), chartJS (Graphs and Statisitics) |
 
 
 
