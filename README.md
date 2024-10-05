@@ -71,6 +71,5 @@ The following diagram visually represents the end-to-end flow of the project.
 
 # **CodeSprout**
 
-We deployed our application on AWS EC2 instance. Link : https://13.51.172.107:8000/
-
+We deployed our application on netlify. Link : https://6701aec6aa1f287e6966a194--codesprout-javafest.netlify.app/
 
