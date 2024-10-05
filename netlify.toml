@@ -1,0 +1,15 @@
+[build]
+  # Directory where the build command will run
+  publish = "build"  # Change this if your output directory is different (e.g., "dist")
+  
+  # Command to run during the build
+  command = "npm install --legacy-peer-deps && npm run build"
+
+[build.environment]
+  NODE_VERSION = "18.20.4"  # Ensure you're using the correct Node.js version
+
+[context.production]
+  # Settings for production build
+  environment = "production"
+
+# Add additional settings if needed
