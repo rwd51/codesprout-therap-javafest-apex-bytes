@@ -67,11 +67,6 @@
       "last 1 safari version"
     ]
   },
-  "overrides": {
-    "@mui/styles": {
-      "react": "17.0.2"
-    }
-  },
   "devDependencies": {
     "file-saver": "^2.0.5"
   }
