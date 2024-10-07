@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -30,13 +30,57 @@ import ProfilePhoto from "./components/LandingPage/ProfilePhoto";
 import SpeechComponent from "./components/dummy";
 import Badges from "./components/KidsProfilePage/Badges";
 
-import LevelCompleteScreen from './components/CodeEditorPage/CodeEditor/components/LevelCompleteScreen'
+import LevelCompleteScreen from "./components/CodeEditorPage/CodeEditor/components/LevelCompleteScreen";
 
+//values
+import { USER_SERVICE_URI } from "./env";
 
 function App() {
-  const [auth, setAuth] = useState(true);
-  const [userType, setUserType] = useState("kids" );
+  const [auth, setAuth] = useState(null);
+  const [userType, setUserType] = useState(null);
   const [userID, setUserID] = useState(null);
+
+  const checkAuthenticated = async () => {
+    try {
+      const res = await fetch(`${USER_SERVICE_URI}/verify`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          token: localStorage.token,
+        },
+        // body: JSON.stringify({
+        //   /*request body*/
+        // }),
+      });
+
+      const parseRes = await res.json();
+
+      if (res.ok) {
+        if (parseRes.success === true) {
+          setAuth(true);
+          setUserType(parseRes.role_name);
+        } else {
+          setAuth(false);
+          setUserType(null);
+        }
+      } else {
+        setAuth(false);
+        setUserType(null);
+      }
+    } catch (err) {
+      console.error("Error fetching /*...*/", err.message);
+      setAuth(false);
+      setUserType(null);
+    }
+  };
+
+  useEffect(() => {
+    checkAuthenticated();
+  }, []);
+
+  if (auth === null) {
+    return <FullScreenLoading />;
+  }
 
   return (
     <>
@@ -90,12 +134,12 @@ function App() {
           <Route
             exact
             path="/kids/:userID/*"
-            element={auth ? <KidsPage /> : <Navigate to="/" replace />}
+            element={auth ? <KidsPage setAuth={setAuth} setUserType={setUserType}/> : <Navigate to="/" replace />}
           />
           <Route
             exact
             path="/parents/:userID/*"
-            element={auth ? <ParentsPage /> : <Navigate to="/" replace />}
+            element={auth ? <ParentsPage setAuth={setAuth} setUserType={setUserType}/> : <Navigate to="/" replace />}
           />
         </Routes>
       </Router>

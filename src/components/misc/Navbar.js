@@ -105,7 +105,9 @@ function Navbar({
   notificationsBackgroundColor,
   notificationsIconColorOnHover,
   notificationsBackgroundColorOnHover,
-  parentPath
+  parentPath,
+  setAuth,
+  setUserType
 }) {
   //the other names are self-explanatory
 
@@ -149,6 +151,8 @@ function Navbar({
               sideBarIconBackGroundColor,
               sideBarIconColorOnHover,
               sideBarIconBackGroundColorOnhover,
+              setAuth,
+              setUserType
             }}
           />
           <img

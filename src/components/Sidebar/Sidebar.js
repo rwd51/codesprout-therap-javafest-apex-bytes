@@ -25,6 +25,8 @@ function Sidebar({
   sideBarIconBackGroundColor = "none",
   sideBarIconColorOnHover = "white",
   sideBarIconBackGroundColorOnhover = "black",
+  setAuth,
+  setUserType
 }) {
   const [isOpen, setIsOpen] = useState(false); //or React.useState()
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -100,11 +102,22 @@ function Sidebar({
               sx={{
                 backgroundColor: "#9dc799", // Button background color
                 "&:hover": {
-                  backgroundColor: "#85b080", // Button hover background color
+                  backgroundColor: "red", // Button hover background color
+                  color: "white",
                 },
               }}
             >
-              <div style={{ color: "black", fontWeight: "bold" }}>Logout</div>
+              <Box
+                sx={{
+                  color: "black",
+                  fontWeight: "bold",
+                  "&:hover": {
+                    color: "white",
+                  },
+                }}
+              >
+                Logout
+              </Box>
             </Button>
           </Box>
         </Box>
@@ -120,7 +133,8 @@ function Sidebar({
   const handleLogoutClick = () => {
     try {
       localStorage.removeItem("token");
-      //setAuth(false);
+      setAuth(false);
+      setUserType(null)
     } catch (err) {
       console.error(err.message);
     }

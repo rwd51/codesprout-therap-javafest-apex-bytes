@@ -76,14 +76,16 @@ function Login({ setAuth, setUserType, setUserID, setIsLoading, type }) {
         console.log(parseRes);
         setAuth(true);
 
-        setUserID(parseRes.id);
+        localStorage.setItem("token", parseRes.token);
 
         if (type === "kids") {
+          setUserID(parseRes.user.id);
           setUserType("kids");
-          navigate(`/kids/${parseRes.id}`, { replace: true });
+          navigate(`/kids/${parseRes.user.id}`, { replace: true });
         } else if (type === "parents") {
+          setUserID(parseRes.parent.id);
           setUserType("parents");
-          navigate(`/parents/${parseRes.id}`, { replace: true });
+          navigate(`/parents/${parseRes.parent.id}`, { replace: true });
         }
       } else {
       }

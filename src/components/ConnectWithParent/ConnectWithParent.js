@@ -253,8 +253,8 @@ function ConnectWithParent() {
   const [parentEmail, setParentEmail] = useState("");
 
   const [allParents, setAllParents] = useState([]);
-  const [parents, setParents] = useState([]);
-  const [sentRequestsToParents, setSentRequestsToParents] = useState([]);
+  const [parents, setParents] = useState(null);
+  const [sentRequestsToParents, setSentRequestsToParents] = useState(null);
 
   // const handleChange = (event) => {
   //   setSelectedParent(event.target.value);

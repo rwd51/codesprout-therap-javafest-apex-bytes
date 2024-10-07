@@ -140,14 +140,18 @@ function Register({ setAuth, setUserType, setUserID, setIsLoading, type }) {
 
       if (res.ok) {
         console.log(parseRes);
-        setUserID(parseRes.id);
+
+        localStorage.setItem("token", parseRes.token);
+        
         if (type === "kids") {
+          setUserID(parseRes.user.id);
           setUserType("kids");
-          navigate(`/getStarted/register/${parseRes.id}`, { replace: true });
+          navigate(`/getStarted/register/${parseRes.user.id}`, { replace: true });
         } else if (type === "parents") {
+          setUserID(parseRes.parent.id);
           setUserType("parents");
           setAuth(true);
-          navigate(`/parents/${parseRes.id}`, { replace: true });
+          navigate(`/parents/${parseRes.parent.id}`, { replace: true });
         }
       } else {
       }

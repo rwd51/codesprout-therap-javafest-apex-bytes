@@ -46,7 +46,7 @@ function Icon({ imageName }) {
   );
 }
 
-function ParentsPage() {
+function ParentsPage({setAuth, setUserType}) {
   const menuItem = [
     {
       path: "./progressReport",
@@ -135,6 +135,8 @@ function ParentsPage() {
         notificationsIconColorOnHover="yellow"
         notificationsBackgroundColorOnHover="black"
         parentPath="kids"
+        setAuth={setAuth}
+        setUserType={setUserType}
       />
       {/* These values aren't used that much in other places of the application. So no need to localize these in the 'values' folder 
                 Also this navbar will be used in the KidsPage, ParentsPage, and AdminPage. So, without localizing the styles, option have been kept to make those styles different for those Navbars */}
