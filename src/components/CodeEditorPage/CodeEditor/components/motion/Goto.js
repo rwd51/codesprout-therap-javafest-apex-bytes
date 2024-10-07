@@ -23,12 +23,18 @@ const GotoXY = ({
   set_y,
   update_active,
 }) => {
+  console.log(comp_id)
   const midAreaListIndex = comp_id
     ? parseInt(comp_id.split("-")[2])
     : list
     ? list.midAreaLists.length - 1
     : 0; //midAreaList0, midAreaList1, midAreaList2, ...
   const componentIndex = comp_id ? parseInt(comp_id.split("-")[3]) : 0;
+
+  console.log(midAreaListIndex, componentIndex)
+
+  console.log(list.midAreaLists[midAreaListIndex].comps[componentIndex].values);
+
 
   const initialValue =
     midAreaListIndex !== undefined &&

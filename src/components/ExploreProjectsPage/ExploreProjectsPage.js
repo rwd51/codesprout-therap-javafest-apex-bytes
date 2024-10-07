@@ -332,7 +332,7 @@ const fetchProjectRecommendations = async (userID, count) => {
   }
 };
 
-function ExploreProjectsPage() {
+function ExploreProjectsPage({setLoadingScreen}) {
   //navigation
   const navigate = useNavigate();
 
@@ -515,6 +515,7 @@ function ExploreProjectsPage() {
             scroll_id={"all-projects-container"}
             title={"All Projects"}
             height={"90vh"}
+            setLoadingScreen={setLoadingScreen}
           />
         </Grid>
         <Grid item xs={3.5} sx={{ display: "flex", alignItems: "center" }}>
@@ -649,6 +650,7 @@ function ExploreProjectsPage() {
             scroll_id={"recommended-projects-container"}
             title={"Top Picks"}
             height={"90vh"}
+            setLoadingScreen={setLoadingScreen}
           />
         </Grid>
 

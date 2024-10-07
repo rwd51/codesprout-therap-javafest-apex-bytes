@@ -26,41 +26,123 @@ const Repeat = ({
   list,
   update_component_value,
   update_active,
+  event_values,
+  //i,
 }) => {
-  console.log(comp_id);
+  //console.log(comp_id);
+  //comp_id && console.log(comp_id);
 
-  const midAreaListIndex = comp_id
-    ? parseInt(String(comp_id).split("-")[2])
-    : list
-    ? list.midAreaLists.length - 1
-    : undefined; // midAreaList0, midAreaList1, midAreaList2, ...
+  // const midAreaListIndex = comp_id
+  //   ? parseInt(String(comp_id).split("-")[2])
+  //   : list
+  //   ? list.midAreaLists.length - 1
+  //   : undefined; // midAreaList0, midAreaList1, midAreaList2, ...
 
-  console.log(midAreaListIndex);
+  // //console.log(midAreaListIndex);
 
-  const componentIndex = comp_id
-    ? parseInt(String(comp_id).split("-")[3])
-    : undefined;
+  // const componentIndex = comp_id
+  //   ? parseInt(String(comp_id).split("-")[3])
+  //   : undefined;
 
-  console.log(componentIndex);
+  // componentIndex && console.log(componentIndex);
 
-  const initialValue =
-    midAreaListIndex !== undefined && componentIndex !== undefined
-      ? list.midAreaLists[midAreaListIndex].comps[componentIndex].values
-      : [0, []]; // gets an array
+  // const initialValue =
+  //   midAreaListIndex !== undefined && componentIndex !== undefined
+  //     ? list.midAreaLists[midAreaListIndex].comps[componentIndex].values
+  //     : [0, []]; // gets an array
 
-  const active =
-    midAreaListIndex !== undefined &&
-    componentIndex !== undefined &&
-    list.midAreaLists.length > 0
-      ? list.midAreaLists[midAreaListIndex].comps[componentIndex].active
-      : true;
+  // const active =
+  //   midAreaListIndex !== undefined &&
+  //   componentIndex !== undefined &&
+  //   list.midAreaLists.length > 0
+  //     ? list.midAreaLists[midAreaListIndex].comps[componentIndex].active
+  //     : true;
 
-  console.log(active);
+  let midAreaListIndex, initialValue, componentIndex, active;
+
+  if (!String(comp_id).startsWith("element")) {
+    //console.log("bruh1");
+
+    midAreaListIndex = comp_id
+      ? parseInt(comp_id.split("-")[2])
+      : list
+      ? list.midAreaLists.length - 1
+      : undefined; //midAreaList0, midAreaList1, midAreaList2, ...
+    componentIndex = comp_id ? parseInt(comp_id.split("-")[3]) : undefined;
+
+    initialValue =
+      midAreaListIndex !== undefined &&
+      componentIndex !== undefined &&
+      list.midAreaLists.length > 0
+        ? list.midAreaLists[midAreaListIndex].comps[componentIndex].values
+        : [0, []]; //gets an array
+
+    //console.log(list.midAreaLists);
+    // console.log(
+    //   i,
+    //   midAreaListIndex,
+    //   componentIndex,
+    //   list.midAreaLists,
+    //   list.midAreaLists[midAreaListIndex].comps[componentIndex]
+    // );
+    // console.log(
+    //   i,
+    //   midAreaListIndex !== undefined &&
+    //     componentIndex !== undefined &&
+    //     list.midAreaLists.length > 0
+    // );
+
+    active =
+      midAreaListIndex !== undefined &&
+      componentIndex !== undefined &&
+      list.midAreaLists.length > 0
+        ? list.midAreaLists[midAreaListIndex].comps[componentIndex].active
+        : true;
+
+    //console.log(midAreaListIndex, componentIndex, initialValue, active);
+  } else {
+    //console.log("bruh2");
+
+    const arr = String(comp_id).split("-");
+
+    midAreaListIndex = parseInt(arr[3], 10);
+    const outermostRepeatBlockIndex = parseInt(arr[4], 10);
+
+    componentIndex = [outermostRepeatBlockIndex];
+    for (let i = 5; i < arr.length; i++) {
+      // Split on the dot and take the second element which should be a number
+      const index = arr[i].split(".")[1];
+      if (index !== undefined) {
+        componentIndex.push(parseInt(index, 10));
+      }
+    }
+
+    const currentList = list.midAreaLists[midAreaListIndex].comps;
+
+    let comp = currentList[componentIndex[0]].values[1];
+    for (let i = 1; i < componentIndex.length - 1; i++) {
+      comp = currentList[componentIndex[i]].values[1];
+    }
+    // console.log(comp)
+    initialValue = comp[componentIndex[componentIndex.length - 1]].values;
+    active = comp[componentIndex[componentIndex.length - 1]].active;
+  }
+
+  // console.log(
+  //   i,
+  //   comp_id,
+  //   midAreaListIndex,
+  //   componentIndex,
+  //   initialValue,
+  //   active
+  // );
+
+  //console.log(active);
 
   const [repeat, setStateRepeat] = useState(parseInt(initialValue[0]));
   const [repeatComponents, setRepeatComponents] = useState(initialValue[1]);
 
-  console.log(initialValue[0], initialValue[1]);
+  //console.log(initialValue[0], initialValue[1]);
 
   // Set Repeat value for current component
   function handleChange(e) {
@@ -86,10 +168,12 @@ const Repeat = ({
     setClicked(!clicked);
   };
 
+
+
   return (
     <Paper elevation={3}>
       <div
-        className="rounded text-center bg-red-400 p-2 my-3"
+        className="rounded text-center bg-orange-400 p-2 my-3"
         style={{ display: "flex" }}
       >
         <div style={{ marginRight: "10px", marginLeft: "5px" }}>
@@ -105,47 +189,48 @@ const Repeat = ({
             />
           </div>
 
-          {/* <Droppable droppableId={droppableId} type="COMPONENTS">
-            {(provided, snapshot) => (
-              <ul
-                className={`${droppableId} bg-gray-200 p-2 rounded`}
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-                style={{
-                  background: snapshot.isDraggingOver ? "blue" : "grey",
-                  padding: 4,
-                  width: "calc(100% - 1px)",
-                  minHeight: 100, // Ensuring there's enough space
-                }}  
-              >
-                {repeatComponents.map((x, i) => {
-                  const comp_id = `${droppableId}-${x.id}.${i}`;
-                  console.log(x)
-                  // console.log(droppableId);
-                  // console.log(x, comp_id);
-                  return (
-                    <Draggable key={comp_id} draggableId={comp_id} index={i}>
-                      {(provided) => (
-                        <li
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          className="my-2"
-                        >
-                          {getComponent(x.id, comp_id)}
-                        </li>
-                      )}
-                    </Draggable>
-                  );
-                })}
-                {provided.placeholder}
-              </ul>
-            )}
-          </Droppable> */}
+          {comp_id && (
+            <Droppable droppableId={droppableId} type="COMPONENTS">
+              {(provided, snapshot) => (
+                <ul
+                  className={`${droppableId} bg-gray-200 p-2 rounded`}
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                  style={{
+                    background: snapshot.isDraggingOver ? "blue" : "grey",
+                    padding: 4,
+                    width: "calc(100% - 1px)",
+                    minHeight: 100, // Ensuring there's enough space
+                  }}
+                >
+                  {repeatComponents.map((x, i) => {
+                    const comp_id = `${droppableId}-${x.id}.${i}`;
+                    // console.log(x);
+                    // console.log(x.id, comp_id);
+                    return (
+                      <Draggable key={comp_id} draggableId={comp_id} index={i}>
+                        {(provided) => (
+                          <li
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            className="my-2"
+                          >
+                            {getComponent(x.id, comp_id)}
+                          </li>
+                        )}
+                      </Draggable>
+                    );
+                  })}
+                  {provided.placeholder}
+                </ul>
+              )}
+            </Droppable>
+          )}
 
           <div
             id={comp_id}
-            className="text-center bg-red-600 text-white px-2 py-1 my-2 text-sm cursor-pointer"
+            className="text-center bg-orange-600 text-white px-2 py-1 my-2 text-sm cursor-pointer"
           >
             Repeat By {repeat}
           </div>
@@ -182,6 +267,7 @@ const mapStateToProps = (state) => {
   return {
     events: state.event,
     list: state.list,
+    event_values: state.event,
   };
 };
 

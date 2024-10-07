@@ -78,20 +78,89 @@ function Code({
     }
   };
 
+  function flatten(componentsArray, idArg) {
+    function processComponents(components, parentRepeatCompId) {
+      let flattenedComponents = [];
+
+      for (let index = 0; index < components.length; index++) {
+        let component = components[index];
+
+        if (component.id === "REPEAT") {
+          // Process the 'REPEAT' block
+          let timesToRepeat = component.values[0];
+          let nestedComponents = component.values[1];
+
+          // Generate the comp_id for the 'REPEAT' block
+          let comp_id;
+
+          if (parentRepeatCompId == null) {
+            // For top-level 'REPEAT' blocks
+            comp_id = `compREPEAT-${idArg}-${index}`;
+          } else {
+            // For nested 'REPEAT' blocks
+            comp_id = `element-${parentRepeatCompId}-REPEAT.${index}`;
+          }
+
+          // Process the nested components once
+          let nestedFlattened = processComponents(
+            nestedComponents,
+            comp_id // pass the comp_id of this 'REPEAT' block
+          );
+
+          // Repeat the nested components the specified number of times
+          for (
+            let repeatIndex = 0;
+            repeatIndex < timesToRepeat;
+            repeatIndex++
+          ) {
+            flattenedComponents = flattenedComponents.concat(nestedFlattened);
+          }
+        } else {
+          // Process regular components
+          // Generate the comp_id
+          let comp_id;
+
+          if (parentRepeatCompId == null) {
+            // For top-level components
+            comp_id = `comp${component.id}-${idArg}-${index}`;
+          } else {
+            // For components nested within a 'REPEAT' block
+            comp_id = `element-${parentRepeatCompId}-${component.id}.${index}`;
+          }
+
+          // Create a copy of the component with the comp_id
+          let componentCopy = { ...component, comp_id: comp_id };
+
+          // Add to the flattenedComponents
+          flattenedComponents.push(componentCopy);
+        }
+      }
+
+      return flattenedComponents;
+    }
+
+    // Start processing from the top-level components
+    return processComponents(componentsArray, null);
+  }
+
   // Handle Running the list
   const handleClick = (arr, id) => {
     if (arr.length === 0) return;
+
+    arr = flatten(arr, id);
 
     let i = 0;
 
     let repeat = 1;
 
-    let str1 = `comp${arr[i].id}-${id}-${i}`;
-
+    //let str1 = `comp${arr[i].id}-${id}-${i}`;
+    let str1 = arr[i].comp_id;
     // Handle Wait at first index
     if (arr[i].active) {
       if (arr[i].id === "WAIT") {
-        let str2 = `comp${arr[i].id}-${id}-${i}`;
+        //let str2 = `comp${arr[i].id}-${id}-${i}`;
+        let str2 = arr[i].comp_id;
+
         let last_time = new Date().getTime();
         let curr_time = new Date().getTime();
 
@@ -103,9 +172,9 @@ function Code({
       }
 
       // Handle Repeat at first index
-      else {
-        repeat = event_values.repeat[str1] + 1;
-      }
+      // else {
+      //   repeat = event_values.repeat[str1] + 1;
+      // }
     }
     i++;
 
@@ -119,7 +188,9 @@ function Code({
       if (arr[i]) {
         if (arr[i].id === "WAIT") {
           if (arr[i].active) {
-            let str2 = `comp${arr[i].id}-${id}-${i}`;
+            //let str2 = `comp${arr[i].id}-${id}-${i}`;
+            let str2 = arr[i].comp_id;
+
             let last_time = new Date().getTime();
             let curr_time = new Date().getTime();
 
@@ -135,23 +206,25 @@ function Code({
         }
 
         // Handle Repeat Component at current index
-        else if (arr[i].id === "REPEAT") {
-          if (arr[i].active) {
-            let str2 = `comp${arr[i].id}-${id}-${i}`;
-            repeat = repeat * (event_values.repeat[str2] + 1);
-          }
+        // else if (arr[i].id === "REPEAT") {
+        //   if (arr[i].active) {
+        //     let str2 = `comp${arr[i].id}-${id}-${i}`;
+        //     repeat = repeat * (event_values.repeat[str2] + 1);
+        //   }
 
-          i++;
-        }
+        //   i++;
+        // }
 
-        // If Repeat component is at previous index
-        else if (arr[i].active && arr[i - 1].id === "REPEAT" && repeat > 2) {
-          let str2 = `comp${arr[i].id}-${id}-${i}`;
-          eventFire(document.getElementById(str2), "click");
-          repeat--;
-        } else {
+        // // If Repeat component is at previous index
+        // else if (arr[i].active && arr[i - 1].id === "REPEAT" && repeat > 2) {
+        //   let str2 = `comp${arr[i].id}-${id}-${i}`;
+        //   eventFire(document.getElementById(str2), "click");
+        //   repeat--;
+        // }
+        else {
           if (arr[i].active) {
-            let str2 = `comp${arr[i].id}-${id}-${i}`;
+            //let str2 = `comp${arr[i].id}-${id}-${i}`;
+            let str2 = arr[i].comp_id;
             eventFire(document.getElementById(str2), "click");
           }
 
@@ -414,7 +487,7 @@ function Code({
                                   let str = x.id;
                                   let component_id = `comp${str}-${l.id}-${i}`;
 
-                                  console.log(str,component_id);
+                                  // console.log(str,component_id);
                                   return (
                                     <Draggable
                                       key={`${str}-${l.id}-${i}`}
@@ -427,7 +500,7 @@ function Code({
                                           {...provided.draggableProps}
                                           {...provided.dragHandleProps}
                                         >
-                                          {getComponent(str, component_id)}
+                                          {getComponent(str, component_id, i)}
                                           {provided.placeholder}
                                         </li>
                                       )}

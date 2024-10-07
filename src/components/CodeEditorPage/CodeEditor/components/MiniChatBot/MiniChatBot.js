@@ -480,9 +480,9 @@ function MiniChatbot({
       });
   };
 
-  useEffect(() => {
-    console.log(complist);
-  }, [complist]);
+  // useEffect(() => {
+  //   console.log(complist);
+  // }, [complist]);
 
   const handleKeepSuggestion = () => {
     set_prev_code(null);
@@ -572,9 +572,9 @@ function MiniChatbot({
     ]);
   }, [userID]);
 
-  useEffect(() => {
-    console.log(generateProjectInput);
-  }, [generateProjectInput]);
+  // useEffect(() => {
+  //   console.log(generateProjectInput);
+  // }, [generateProjectInput]);
 
   const handleToggle = () => {
     setIsOpen(!isOpen);

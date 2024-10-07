@@ -32,8 +32,8 @@ const Move = ({
       ? parseInt(comp_id.split("-")[2])
       : list
       ? list.midAreaLists.length - 1
-      : 0; //midAreaList0, midAreaList1, midAreaList2, ...
-    componentIndex = comp_id ? parseInt(comp_id.split("-")[3]) : 0;
+      : undefined; //midAreaList0, midAreaList1, midAreaList2, ...
+    componentIndex = comp_id ? parseInt(comp_id.split("-")[3]) : undefined;
 
     initialValue =
       midAreaListIndex !== undefined &&

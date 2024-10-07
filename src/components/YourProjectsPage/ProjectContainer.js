@@ -28,6 +28,7 @@ function ProjectContainer({
   own = false,
   cloned = false,
   collaborating = false,
+  setLoadingScreen
 }) {
   const navigate = useNavigate();
 
@@ -36,6 +37,7 @@ function ProjectContainer({
     <Paper
       elevation={3}
       sx={{
+        width: '100%',
         height: height,
         display: "flex",
         flexDirection: "column",
@@ -68,7 +70,7 @@ function ProjectContainer({
             <List>
               {projects.map((project, index) => (
                 <ListItem key={index} alignItems="flex-start">
-                  <ProjectCard project={project} own={own} />
+                  <ProjectCard project={project} own={own} setLoadingScreen={setLoadingScreen}/>
                 </ListItem>
               ))}
             </List>

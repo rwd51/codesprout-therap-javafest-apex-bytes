@@ -132,7 +132,7 @@ function KidsPage() {
 
   const [isLoading, setIsLoading] = useState(true);
 
-  //handling loading during creating and updating project
+  //handling loading during creating, updating, and cloning project
   const [loadingScreen, setLoadingScreen] = useState(false);
 
   useEffect(() => {
@@ -190,12 +190,12 @@ function KidsPage() {
           <Route path="/" element={<Outlet />}>
             <Route path="/" element={<Navigate to="./profile" replace />} />
             <Route path="/chatBot" element={<ChatBotPage />} />
-            <Route path="/exploreProjects" element={<ExploreProjectsPage />} />
+            <Route path="/exploreProjects" element={<ExploreProjectsPage setLoadingScreen={setLoadingScreen}/>} />
             <Route path="/yourProjects" element={<YourProjectsPage />} />
             <Route path="/problems" element={<ProblemsPage />} />
             <Route path="/profile" element={<KidsProfilePage />} />
             <Route path="/connectWithParent" element={<ConnectWithParent />} />
-            <Route path="/profile/:ID" element={<ProfilePage />} />
+            <Route path="/profile/:ID" element={<ProfilePage setLoadingScreen={setLoadingScreen}/>} />
             <Route
               path="/projectInfo/:projectID"
               element={<ProjectInfoPage />}

@@ -17,7 +17,7 @@ import Think from "./looks/Think";
 import ThinkWithTimer from "./looks/ThinkWithTimer";
 
 // fetch components based on different keys
-export const getComponent = (key, id) => {
+export const getComponent = (key, id,i) => {
   switch (key) {
     case "MOVE_Y":
       return <MoveY comp_id={id} />;
@@ -55,7 +55,7 @@ export const getComponent = (key, id) => {
       return <Wait comp_id={id} />;
 
     case "REPEAT": 
-      return <Repeat comp_id={id} />;
+      return <Repeat comp_id={id} i={i}/>;
 
     case "HIDE_MESSAGE":
       return <HideMessage comp_id={id} />;

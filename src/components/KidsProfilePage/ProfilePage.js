@@ -519,7 +519,7 @@ import Badges from "./Badges";
 import ScrollRightButton from "../misc/ScrollRightButton";
 import Interests from "./Interests";
 import Tags from "./Tags";
-import CustomRoundedButton from "../misc/CustomRoundedButton";
+import ProjectContainer from "../YourProjectsPage/ProjectContainer";
 
 //values
 import { TITLE, CONTENT, TITLE_THICK } from "../../values/Fonts";
@@ -685,6 +685,29 @@ const fetchProblemSolvingScore = async (userID) => {
   }
 };
 
+//fetching project details
+const fetchProjectDetails = async (projectID) => {
+  try {
+    const res = await fetch(`${PROJECT_SERVICE_URI}?id=${projectID}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "ngrok-skip-browser-warning": "69420",
+        //'token': localStorage.token
+      },
+    });
+
+    const parseRes = await res.json();
+    if (res.ok) {
+      console.log(parseRes);
+      return parseRes;
+    } else {
+    }
+  } catch (err) {
+    console.error(err.message);
+  }
+};
+
 const badges = [
   "Puzzle Prodigy",
   "Code Voyager",
@@ -717,11 +740,12 @@ const getRandomLightAndDarkColor = () => {
   return { lightColor, darkColor };
 };
 
-function ProfilePage() {
+function ProfilePage({ setLoadingScreen }) {
   const [userDetails, setUserDetails] = useState(null);
   const [creativityScore, setCreativityScore] = useState(null);
   const [collaborationScore, setCollaborationScore] = useState(null);
   const [problemSolvingScore, setProblemSolvingScore] = useState(null);
+  const [publicProjects, setPublicProjects] = useState(null);
   const { userID, ID } = useParams();
 
   const avatarBackgroundColor = getRandomLightAndDarkColor();
@@ -759,7 +783,23 @@ function ProfilePage() {
   //fetchinf user details
   useEffect(() => {
     fetchUserDetails(ID)
-      .then((user) => setUserDetails(user))
+      .then((user) => {
+        setUserDetails(user);
+
+        const fetchAllPublicProjects = async () => {
+          try {
+            const projects = await Promise.all(
+              user.projectIds.map((id) => {
+                return fetchProjectDetails(id);
+              })
+            );
+            setPublicProjects(projects.filter((proj) => proj.public === true));
+          } catch (err) {
+            console.log(err);
+          }
+        };
+        fetchAllPublicProjects();
+      })
       .catch((err) => console.log(err));
 
     fetchCreativityScore(ID)
@@ -815,13 +855,13 @@ function ProfilePage() {
   ) => {
     switch (label) {
       case "Creativity":
-        return `Your creativity score is ${creativityScore.creativityScore}. You have made ${creativityScore.ownProjectsCount} projects by yourself and collaborated in ${creativityScore.collaboratingProjectsCount} projects with others`;
+        return `Creativity score is ${creativityScore.creativityScore}. The user has made ${creativityScore.ownProjectsCount} projects by yourself and collaborated in ${creativityScore.collaboratingProjectsCount} projects with others`;
         break;
       case "Collaboration":
-        return `Your collaboration score is ${collaborationScore.collaborationScore}. You cloned ${collaborationScore.collaboratingProjectsCount} projects.`;
+        return `Collaboration score is ${collaborationScore.collaborationScore}. The user cloned ${collaborationScore.collaboratingProjectsCount} projects.`;
         break;
       case "Problem Solving":
-        return `Your problem solving score is ${problemSolvingScore.collaboraproblemSolvingScoretionScore}. You solved ${problemSolvingScore.beginnerSolved} beginner problems, ${problemSolvingScore.intermediateSolved} intermediate problems, and ${problemSolvingScore.advancedSolved} advamced problems`;
+        return `Problem solving score is ${problemSolvingScore.collaboraproblemSolvingScoretionScore}. The user solved ${problemSolvingScore.beginnerSolved} beginner problems, ${problemSolvingScore.intermediateSolved} intermediate problems, and ${problemSolvingScore.advancedSolved} advamced problems`;
         break;
     }
   };
@@ -873,7 +913,7 @@ function ProfilePage() {
               User Information
             </Typography>
             {!userDetails ? (
-              <div style={{ display: "flex", flex: 1, alignItems: "center" }}>
+              <div style={{ display: "flex", flex: 1, alignItems: "center", padding: 70 }}>
                 <Loading
                   spinnerLogoURL={`${window.location.origin}/logo/CodeSprout_Icon_Transparent.png`}
                   sprinnerWidth="250px"
@@ -1081,74 +1121,100 @@ function ProfilePage() {
             >
               Stats Overview
             </Typography>
-            <Box
-              sx={{
-                width: "90%",
-                display: "flex",
-                justifyContent: "flex-end",
-                alignItems: "center",
-                pt: 2,
-                pr: 1,
-                pb: 0.5,
-                gap: "1rem",
-              }}
-            >
-              <Tags tag="Master Builder" />
-            </Box>
-            <Box
-              sx={{
-                width: "90%",
-                display: "flex",
-                justifyContent: "flex-end",
-                alignItems: "center",
+            {userDetails ? (
+              <>
+                {" "}
+                <Box
+                  sx={{
+                    width: "90%",
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    alignItems: "center",
+                    pt: 2,
+                    pr: 1,
+                    pb: 0.5,
+                    gap: "1rem",
+                  }}
+                >
+                  <Tags tag="Master Builder" />
+                </Box>
+                <Box
+                  sx={{
+                    width: "90%",
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    alignItems: "center",
 
-                //padding: 10,
-                pr: 0.7,
-                gap: "1rem",
-              }}
-            >
-              <Typography
-                variant="h3"
-                sx={{
-                  textAlign: "center",
-                  fontSize: 20,
-                  fontFamily: CONTENT,
+                    //padding: 10,
+                    pr: 0.7,
+                    gap: "1rem",
+                  }}
+                >
+                  <Typography
+                    variant="h3"
+                    sx={{
+                      textAlign: "center",
+                      fontSize: 20,
+                      fontFamily: CONTENT,
+                    }}
+                  >
+                    {
+                      (() => {
+                        const colors = tagColors["Master Builder"]; // Move `const colors` here
+                        return (
+                          <Chip
+                            label={"Master Builder"}
+                            sx={{
+                              //mr: 1,
+                              color: "black",
+                              backgroundColor: colors.light,
+                              "&:hover": {
+                                color: "white",
+                                backgroundColor: colors.dark,
+                              },
+                            }}
+                          />
+                        );
+                      })() // Immediately invoke function expression (IIFE) to return JSX
+                    }
+                  </Typography>
+                </Box>
+                <div
+                  style={{
+                    width: "100%",
+                    height: "80%",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    alignSelf: "center",
+                  }}
+                >
+                  <Doughnut
+                    data={data}
+                    options={chartOptions("Overall Stats")}
+                  />
+                </div>
+              </>
+            ) : (
+              <div
+                style={{
+                  display: "flex",
+                  flex: 1,
+                  alignItems: "center",
+                  padding: 70,
                 }}
               >
-                {
-                  (() => {
-                    const colors = tagColors["Master Builder"]; // Move `const colors` here
-                    return (
-                      <Chip
-                        label={"Master Builder"}
-                        sx={{
-                          //mr: 1,
-                          color: "black",
-                          backgroundColor: colors.light,
-                          "&:hover": {
-                            color: "white",
-                            backgroundColor: colors.dark,
-                          },
-                        }}
-                      />
-                    );
-                  })() // Immediately invoke function expression (IIFE) to return JSX
-                }
-              </Typography>
-            </Box>
-
-            <div
-              style={{
-                width: "100%",
-                height: "80%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                alignSelf: "center",
-              }}
-            >
-              <Doughnut data={data} options={chartOptions("Overall Stats")} />
-            </div>
+                <Loading
+                  spinnerLogoURL={`${window.location.origin}/logo/CodeSprout_Icon_Transparent.png`}
+                  sprinnerWidth="250px"
+                  spinnerHeight="250px"
+                  spinnerImageWidth="200px"
+                  spinnerImageHeight="200px"
+                  spinnerColor="#334B71"
+                  spinnerBackgroundColor="#ebfdff"
+                />
+              </div>
+            )}
           </Paper>
         </Grid>
 
@@ -1183,7 +1249,7 @@ function ProfilePage() {
           >
             {userDetails && userDetails.badges.length > 0 ? (
               <Badges badges={badges} />
-            ) : (
+            ) : userDetails ? (
               <div
                 style={{
                   width: "100%",
@@ -1204,6 +1270,28 @@ function ProfilePage() {
                   No Badges Till Now
                 </Typography>
               </div>
+            ) : (
+              <div
+                style={{
+                  display: "flex",
+                  flex: 1,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  //padding: 70,
+                  width: "100%",
+                  //border: '2px solid red'
+                }}
+              >
+                <Loading
+                  //spinnerLogoURL={`${window.location.origin}/logo/CodeSprout_Icon_Transparent.png`}
+                  sprinnerWidth="100px"
+                  spinnerHeight="100px"
+                  spinnerImageWidth="50px"
+                  spinnerImageHeight="50px"
+                  spinnerColor="red"
+                  spinnerBackgroundColor="#ebfdff"
+                />
+              </div>
             )}
           </Box>
           {userDetails && userDetails.badges.length > 0 && (
@@ -1221,7 +1309,10 @@ function ProfilePage() {
         </Grid>
 
         {/* Detailed Stats Sections */}
-        <Grid container sx={{ mt: 10, p: 3 }}>
+        <Grid
+          container
+          sx={{ mt: 10, p: 3, display: "flex", flexDirection: "column" }}
+        >
           <Typography
             variant="h4"
             sx={{ fontWeight: "bold", fontFamily: TITLE }}
@@ -1229,9 +1320,7 @@ function ProfilePage() {
             {" "}
             Detailed Stats Breakdown
           </Typography>
-          {collaborationScore &&
-            creativityScore &&
-            problemSolvingScore &&
+          {collaborationScore && creativityScore && problemSolvingScore ? (
             data.labels.map((label, index) => (
               <Grid
                 item
@@ -1323,7 +1412,7 @@ function ProfilePage() {
                           label
                         )}
                       </Typography>
-                      <div
+                      {/* <div
                         style={{
                           display: "flex",
                           justifyContent: "flex-end",
@@ -1352,12 +1441,53 @@ function ProfilePage() {
                               : navigate(`/kids/${userID}/problems`);
                           }}
                         />
-                      </div>
+                      </div> */}
                     </Paper>
                   </Grid>
                 </Grid>
               </Grid>
-            ))}
+            ))
+          ) : (
+            <div
+              style={{
+                marginTop: 40,
+                display: "flex",
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+                padding: 100,
+                border: "10px solid black",
+                borderRadius: "30px",
+                backgroundColor: "white",
+              }}
+            >
+              <Loading
+                spinnerLogoURL={`${window.location.origin}/logo/CodeSprout_Icon_Transparent.png`}
+                sprinnerWidth="250px"
+                spinnerHeight="250px"
+                spinnerImageWidth="200px"
+                spinnerImageHeight="200px"
+                spinnerColor="#334B71"
+                spinnerBackgroundColor="#ebfdff"
+              />
+            </div>
+          )}
+        </Grid>
+        <Grid container sx={{ mt: 3, p: 3}}>
+        <Typography
+            variant="h4"
+            sx={{ mb: 3, fontWeight: "bold", fontFamily: TITLE }}
+          >
+            {" "}
+            All Public Projects
+          </Typography>
+          <ProjectContainer
+            projects={publicProjects} //{filteredProjects}
+            scroll_id={"user-public-projects-container"}
+            title={"Projects"}
+            height={"90vh"}
+            setLoadingScreen={setLoadingScreen}
+          />
         </Grid>
       </Grid>
     </div>
@@ -1365,4 +1495,3 @@ function ProfilePage() {
 }
 
 export default ProfilePage;
-

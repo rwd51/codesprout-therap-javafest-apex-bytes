@@ -11,19 +11,70 @@ import { connect } from "react-redux";
 import { updateActive } from "../../redux/midarea/actions";
 
 const Show = ({ character, comp_id, update_active, list }) => {
-  const midAreaListIndex = comp_id
-    ? parseInt(comp_id.split("-")[2])
-    : list
-    ? list.midAreaLists.length - 1
-    : 0; //midAreaList0, midAreaList1, midAreaList2, ...
-  const componentIndex = comp_id ? parseInt(comp_id.split("-")[3]) : 0;
+  // const midAreaListIndex = comp_id
+  //   ? parseInt(comp_id.split("-")[2])
+  //   : list
+  //   ? list.midAreaLists.length - 1
+  //   : 0; //midAreaList0, midAreaList1, midAreaList2, ...
+  // const componentIndex = comp_id ? parseInt(comp_id.split("-")[3]) : 0;
 
-  const active =
-    midAreaListIndex !== undefined &&
-    componentIndex !== undefined &&
-    list.midAreaLists.length > 0
-      ? list.midAreaLists[midAreaListIndex].comps[componentIndex].active
-      : true;
+  // const active =
+  //   midAreaListIndex !== undefined &&
+  //   componentIndex !== undefined &&
+  //   list.midAreaLists.length > 0
+  //     ? list.midAreaLists[midAreaListIndex].comps[componentIndex].active
+  //     : true;
+
+  let midAreaListIndex, initialValue, componentIndex, active;
+
+  if (!String(comp_id).startsWith("element")) {
+    midAreaListIndex = comp_id
+      ? parseInt(comp_id.split("-")[2])
+      : list
+      ? list.midAreaLists.length - 1
+      : undefined; //midAreaList0, midAreaList1, midAreaList2, ...
+    componentIndex = comp_id ? parseInt(comp_id.split("-")[3]) : undefined;
+
+    // initialValue =
+    //   midAreaListIndex !== undefined &&
+    //   componentIndex !== undefined &&
+    //   list.midAreaLists.length > 0
+    //     ? list.midAreaLists[midAreaListIndex].comps[componentIndex].values
+    //     : []; //gets an array
+
+    initialValue = [];
+
+    active =
+      midAreaListIndex !== undefined &&
+      componentIndex !== undefined &&
+      list.midAreaLists.length > 0
+        ? list.midAreaLists[midAreaListIndex].comps[componentIndex].active
+        : true;
+  } else {
+    const arr = String(comp_id).split("-");
+
+    midAreaListIndex = parseInt(arr[3], 10);
+    const outermostRepeatBlockIndex = parseInt(arr[4], 10);
+
+    componentIndex = [outermostRepeatBlockIndex];
+    for (let i = 5; i < arr.length; i++) {
+      // Split on the dot and take the second element which should be a number
+      const index = arr[i].split(".")[1];
+      if (index !== undefined) {
+        componentIndex.push(parseInt(index, 10));
+      }
+    }
+
+    const currentList = list.midAreaLists[midAreaListIndex].comps;
+
+    let comp = currentList[componentIndex[0]].values[1];
+    for (let i = 1; i < componentIndex.length - 1; i++) {
+      comp = currentList[componentIndex[i]].values[1];
+    }
+    // console.log(comp)
+    initialValue = comp[componentIndex[componentIndex.length - 1]].values;
+    active = comp[componentIndex[componentIndex.length - 1]].active;
+  }
 
   // To handle show component
   const handleDisplay = () => {

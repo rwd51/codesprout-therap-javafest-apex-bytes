@@ -34,8 +34,8 @@ import LevelCompleteScreen from './components/CodeEditorPage/CodeEditor/componen
 
 
 function App() {
-  const [auth, setAuth] = useState(false);
-  const [userType, setUserType] = useState(null);
+  const [auth, setAuth] = useState(true);
+  const [userType, setUserType] = useState("kids" );
   const [userID, setUserID] = useState(null);
 
   return (

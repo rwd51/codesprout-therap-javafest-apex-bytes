@@ -13,7 +13,13 @@ const initialState = {
   midAreaLists: [
     {
       id: "midAreaList-0",
-      comps:  [{ id: "MOVE", values: [0], active: true }],
+      comps: [
+        {
+          id: "MOVE",
+          values: [0],
+          active: true,
+        },
+      ],
       character_id: "sprite0",
     },
   ],

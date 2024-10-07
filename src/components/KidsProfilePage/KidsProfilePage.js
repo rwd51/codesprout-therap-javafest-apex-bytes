@@ -379,7 +379,14 @@ function KidsProfilePage() {
               User Information
             </Typography>
             {!userDetails ? (
-              <div style={{ display: "flex", flex: 1, alignItems: "center" }}>
+              <div
+                style={{
+                  display: "flex",
+                  flex: 1,
+                  alignItems: "center",
+                  padding: 70,
+                }}
+              >
                 <Loading
                   spinnerLogoURL={`${window.location.origin}/logo/CodeSprout_Icon_Transparent.png`}
                   sprinnerWidth="250px"
@@ -587,74 +594,100 @@ function KidsProfilePage() {
             >
               Stats Overview
             </Typography>
-            <Box
-              sx={{
-                width: "90%",
-                display: "flex",
-                justifyContent: "flex-end",
-                alignItems: "center",
-                pt: 2,
-                pr: 1,
-                pb: 0.5,
-                gap: "1rem",
-              }}
-            >
-              {userDetails && <Tags tag={userDetails.tag} />}
-            </Box>
-            <Box
-              sx={{
-                width: "90%",
-                display: "flex",
-                justifyContent: "flex-end",
-                alignItems: "center",
+            {userDetails ? (
+              <>
+                <Box
+                  sx={{
+                    width: "90%",
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    alignItems: "center",
+                    pt: 2,
+                    pr: 1,
+                    pb: 0.5,
+                    gap: "1rem",
+                  }}
+                >
+                  {userDetails && <Tags tag={userDetails.tag} />}
+                </Box>
+                <Box
+                  sx={{
+                    width: "90%",
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    alignItems: "center",
 
-                //padding: 10,
-                pr: 0.7,
-                gap: "1rem",
-              }}
-            >
-              <Typography
-                variant="h3"
-                sx={{
-                  textAlign: "center",
-                  fontSize: 20,
-                  fontFamily: CONTENT,
+                    //padding: 10,
+                    pr: 0.7,
+                    gap: "1rem",
+                  }}
+                >
+                  <Typography
+                    variant="h3"
+                    sx={{
+                      textAlign: "center",
+                      fontSize: 20,
+                      fontFamily: CONTENT,
+                    }}
+                  >
+                    {
+                      (() => {
+                        const colors = tagColors["Master Builder"]; // Move `const colors` here
+                        return (
+                          <Chip
+                            label={userDetails ? userDetails.tag : ""}
+                            sx={{
+                              //mr: 1,
+                              color: "black",
+                              backgroundColor: colors.light,
+                              "&:hover": {
+                                color: "white",
+                                backgroundColor: colors.dark,
+                              },
+                            }}
+                          />
+                        );
+                      })() // Immediately invoke function expression (IIFE) to return JSX
+                    }
+                  </Typography>
+                </Box>
+
+                <div
+                  style={{
+                    width: "100%",
+                    height: "80%",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    alignSelf: "center",
+                  }}
+                >
+                  <Doughnut
+                    data={data}
+                    options={chartOptions("Overall Stats")}
+                  />
+                </div>
+              </>
+            ) : (
+              <div
+                style={{
+                  display: "flex",
+                  flex: 1,
+                  alignItems: "center",
+                  padding: 70,
                 }}
               >
-                {
-                  (() => {
-                    const colors = tagColors["Master Builder"]; // Move `const colors` here
-                    return (
-                      <Chip
-                        label={userDetails ? userDetails.tag: ""}
-                        sx={{
-                          //mr: 1,
-                          color: "black",
-                          backgroundColor: colors.light,
-                          "&:hover": {
-                            color: "white",
-                            backgroundColor: colors.dark,
-                          },
-                        }}
-                      />
-                    );
-                  })() // Immediately invoke function expression (IIFE) to return JSX
-                }
-              </Typography>
-            </Box>
-
-            <div
-              style={{
-                width: "100%",
-                height: "80%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                alignSelf: "center",
-              }}
-            >
-              <Doughnut data={data} options={chartOptions("Overall Stats")} />
-            </div>
+                <Loading
+                  spinnerLogoURL={`${window.location.origin}/logo/CodeSprout_Icon_Transparent.png`}
+                  sprinnerWidth="250px"
+                  spinnerHeight="250px"
+                  spinnerImageWidth="200px"
+                  spinnerImageHeight="200px"
+                  spinnerColor="#334B71"
+                  spinnerBackgroundColor="#ebfdff"
+                />
+              </div>
+            )}
           </Paper>
         </Grid>
 
@@ -689,7 +722,7 @@ function KidsProfilePage() {
           >
             {userDetails && userDetails.badges.length > 0 ? (
               <Badges badges={badges} />
-            ) : (
+            ) : userDetails ? (
               <div
                 style={{
                   width: "100%",
@@ -710,6 +743,28 @@ function KidsProfilePage() {
                   No Badges Till Now
                 </Typography>
               </div>
+            ) : (
+              <div
+                style={{
+                  display: "flex",
+                  flex: 1,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  //padding: 70,
+                  width: "100%",
+                  //border: '2px solid red'
+                }}
+              >
+                <Loading
+                  //spinnerLogoURL={`${window.location.origin}/logo/CodeSprout_Icon_Transparent.png`}
+                  sprinnerWidth="100px"
+                  spinnerHeight="100px"
+                  spinnerImageWidth="50px"
+                  spinnerImageHeight="50px"
+                  spinnerColor="red"
+                  spinnerBackgroundColor="#ebfdff"
+                />
+              </div>
             )}
           </Box>
           {userDetails && userDetails.badges.length > 0 && (
@@ -727,7 +782,7 @@ function KidsProfilePage() {
         </Grid>
 
         {/* Detailed Stats Sections */}
-        <Grid container sx={{ mt: 10, p: 3 }}>
+        <Grid container sx={{ mt: 10, p: 3, display: 'flex', flexDirection: 'column' }}>
           <Typography
             variant="h4"
             sx={{ fontWeight: "bold", fontFamily: TITLE }}
@@ -735,9 +790,7 @@ function KidsProfilePage() {
             {" "}
             Detailed Stats Breakdown
           </Typography>
-          {collaborationScore &&
-            creativityScore &&
-            problemSolvingScore &&
+          {collaborationScore && creativityScore && problemSolvingScore ? (
             data.labels.map((label, index) => (
               <Grid
                 item
@@ -863,7 +916,32 @@ function KidsProfilePage() {
                   </Grid>
                 </Grid>
               </Grid>
-            ))}
+            ))
+          ) : (
+            <div
+            style={{
+              marginTop: 40,
+              display: "flex",
+              flex: 1,
+              alignItems: "center",
+              justifyContent: 'center',
+              padding: 100,
+              border: '10px solid black',
+              borderRadius: '30px',
+              backgroundColor: 'white',
+            }}
+          >
+            <Loading
+              spinnerLogoURL={`${window.location.origin}/logo/CodeSprout_Icon_Transparent.png`}
+              sprinnerWidth="250px"
+              spinnerHeight="250px"
+              spinnerImageWidth="200px"
+              spinnerImageHeight="200px"
+              spinnerColor="#334B71"
+              spinnerBackgroundColor="#ebfdff"
+            />
+          </div>
+          )}
         </Grid>
       </Grid>
     </div>

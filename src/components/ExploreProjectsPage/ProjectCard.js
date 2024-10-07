@@ -123,53 +123,12 @@ const duplicateFileInFirebase = async (originalFileName, newFileName) => {
   }
 };
 
-//handling project clone
-const handleCloneProject = async (userDetails, project) => {
-  try {
-    console.log(project);
-    const res = await fetch(`${PROJECT_SERVICE_URI}/clone/${userDetails.id}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        //'token': localStorage.token
-      },
-      body: JSON.stringify({
-        projectId: project.projectId,
-        projectName: `${project.projectName}-cloned-${userDetails.username}`,
-        description: `${project.description}-(cloned)`,
-        userId: userDetails.id,
-        clonedUserIds: [],
-        creationDate: new Date(),
-        lastUpdateDate: new Date(),
-        tags: project.tags,
-        public: false,
-        collaborators: [],
-        midAreaLists: project.midAreaLists,
-        characters: project.characters,
-        active: project.active,
-        ratings: {},
-      }),
-    });
-
-    const parseRes = await res.json();
-
-    if (res.ok) {
-      return duplicateFileInFirebase(project.projectId, parseRes.projectId)
-        .then(() => {
-          return parseRes; // Return the parsed response here
-        })
-        .catch((err) => {
-          console.log(err);
-          throw err; // Propagate the error
-        });
-    } else {
-    }
-  } catch (err) {
-    console.error("Error fetching /*...*/", err.message);
-  }
-};
-
-function ProjectCard({ project, showImage = true, own = false }) {
+function ProjectCard({
+  project,
+  showImage = true,
+  own = false,
+  setLoadingScreen,
+}) {
   //using navigation
   const navigate = useNavigate();
 
@@ -213,6 +172,58 @@ function ProjectCard({ project, showImage = true, own = false }) {
       .then((url) => setProjectCoverURL(url))
       .catch((err) => console.log(err));
   }, [project]);
+
+  //handling project clone
+  const handleCloneProject = async (userDetails, project) => {
+    try {
+      setLoadingScreen(true);
+      console.log(project);
+      const res = await fetch(
+        `${PROJECT_SERVICE_URI}/clone/${userDetails.id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            //'token': localStorage.token
+          },
+          body: JSON.stringify({
+            projectId: project.projectId,
+            projectName: `${project.projectName}-cloned-${userDetails.username}`,
+            description: `${project.description}-(cloned)`,
+            userId: userDetails.id,
+            clonedUserIds: [],
+            creationDate: new Date(),
+            lastUpdateDate: new Date(),
+            tags: project.tags,
+            public: false,
+            collaborators: [],
+            midAreaLists: project.midAreaLists,
+            characters: project.characters,
+            active: project.active,
+            ratings: {},
+          }),
+        }
+      );
+
+      const parseRes = await res.json();
+
+      if (res.ok) {
+        return duplicateFileInFirebase(project.projectId, parseRes.projectId)
+          .then(() => {
+            return parseRes; // Return the parsed response here
+          })
+          .catch((err) => {
+            console.log(err);
+            throw err; // Propagate the error
+          });
+      } else {
+      }
+    } catch (err) {
+      console.error("Error fetching /*...*/", err.message);
+    } finally {
+      setLoadingScreen(false);
+    }
+  };
 
   return (
     <Card sx={{ width: "100%", borderRadius: "30px" }}>
